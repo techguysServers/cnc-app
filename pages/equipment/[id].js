@@ -1,15 +1,20 @@
+import { useRouter } from 'next/router'
 import { useEffect, useState } from "react";
 
-import Sidebar from "../components/Sidebar";
-import Button from "../components/Button";
-import Card from "../components/Card";
+import Button from "../../components/Button";
+import Sidebar from "../../components/Sidebar";
+import Table from "../../components/Table";
 
-export default function Home() {
+function EquipmentTable() {
+  const router = useRouter()
+  const { id, name } = router.query
+  console.log(name)
+
   const [data, setData] = useState([]);
 
   useEffect(() => {
     const getData = async () => {
-      let serverResponse = await fetch("/api/get?request=equipments_types", {
+      let serverResponse = await fetch("/api/get?request=equipments", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -17,6 +22,7 @@ export default function Home() {
         },
       });
       let data = await serverResponse.json();
+      console.log(data)
       setData(data.data);
     };
     getData();
@@ -29,26 +35,18 @@ export default function Home() {
         <div className="w-full h-full">
           <div className="flex flex-row">
             <div className="flex-1">
-              <h1 className="text-2xl">Types d'équipement</h1>
+              <h1 className="text-2xl">{name}</h1>
             </div>
             <div className="flex-1 text-right">
               <Button label="Ajouter" />
             </div>
           </div>
           <br />
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-12">
-            {data.map(type =>(
-              <Card
-                key={type.id}
-                tag="Transport"
-                title={type.name}
-                description={type.description}
-                link={"/equipment/" + type.id + "?name=" + type.name}
-              />
-            ))}
-          </div>
+            <Table data={data}/>
         </div>
       </div>
     </div>
   );
 }
+
+export default EquipmentTable
