@@ -14,7 +14,7 @@ function EquipmentTable() {
 
   useEffect(() => {
     const getData = async () => {
-      let serverResponse = await fetch("/api/get?request=equipments", {
+      let serverResponse = await fetch("/api/get?request=equipments&id=" + id, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

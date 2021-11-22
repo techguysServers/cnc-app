@@ -7,11 +7,11 @@ function Card({image, tag, title, description, link}) {
   }
 
   return (
-    <div className="overflow-hidden shadow-lg rounded-lg h-90 w-60 md:w-80 cursor-pointer m-auto">
+    <div className="overflow-hidden shadow-lg rounded-lg h-90 w-60 md:w-80 cursor-pointer m-auto flex-grow">
       <a onClick={() => handleClick()} className="w-full block h-full">
         <img
           alt="blog photo"
-          src="https://images.unsplash.com/photo-1591768793355-74d04bb6608f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=572&q=80"
+          src={image}
           className="max-h-40 w-full object-cover"
         />
         <div className="bg-white dark:bg-gray-800 w-full p-4">

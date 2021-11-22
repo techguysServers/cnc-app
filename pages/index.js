@@ -44,6 +44,7 @@ export default function Home() {
                 title={type.name}
                 description={type.description}
                 link={"/equipment/" + type.id + "?name=" + type.name}
+                image={type.image_link}
               />
             ))}
           </div>

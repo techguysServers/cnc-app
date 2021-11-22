@@ -24,6 +24,12 @@ function Table({ data }) {
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
+                   Date de création
+                  </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
                     Status
                   </th>
                   <th scope="col" className="relative px-6 py-3">
@@ -54,6 +60,11 @@ function Table({ data }) {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">
                         {type.num_inspection}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">
+                        {type.date_created.split('T')[0]}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
