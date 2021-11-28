@@ -39,7 +39,7 @@ export default function Home() {
             tag="Transport"
             title={type.name}
             description={type.description}
-            link={"/equipment/" + type.id + "?name=" + type.name}
+            link={"/equipments/" + type.id + "?name=" + type.name}
             image={type.image_link}
           />
         ))}

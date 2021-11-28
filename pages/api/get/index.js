@@ -1,5 +1,5 @@
 import {
-  getEquipments,
+  getAllEquipments,
   getEquipmentsTypes,
   getEquipmentType,
   getEquipmentTypeOptions,
@@ -13,7 +13,7 @@ export default async function handler(req, res) {
       res.status(200).json({ data: data });
       break;
     case "equipments":
-      var data = await getEquipments(req.query.id);
+      var data = await getAllEquipments(req.query.id);
       res.status(200).json({ data: data });
       break;
     case "equipment_types_options":
