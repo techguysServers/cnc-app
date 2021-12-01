@@ -1,4 +1,4 @@
-function InputRequired({ label, placeholder, id, onChange}) {
+function InputRequired({ label, placeholder, id, onChange, value }) {
   return (
     <div className=" relative ">
       <label htmlFor={id} className="text-gray-700">
@@ -6,6 +6,7 @@ function InputRequired({ label, placeholder, id, onChange}) {
         <span className="text-red-500 required-dot">*</span>
       </label>
       <input
+        value={value}
         onChange={onChange}
         type="text"
         id={id}
@@ -17,4 +18,4 @@ function InputRequired({ label, placeholder, id, onChange}) {
   );
 }
 
-export default InputRequired
+export default InputRequired;

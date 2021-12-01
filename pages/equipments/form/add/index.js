@@ -45,7 +45,7 @@ function AddEquipment({ equipmentTypeData }) {
       numInspection: numInspection,
       metaData: customInputs,
     };
-    let serverResponse = await fetch("/api/post", {
+    let serverResponse = await fetch("/api/equipment", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -91,7 +91,7 @@ function AddEquipment({ equipmentTypeData }) {
 
   // Redirect the user to the equipment page after confirm
   const handleConfirm = () => {
-    router.push('/equipment/' + id + '?name=' + equipmentTypeData.name)
+    router.push('/equipments/' + id + '?name=' + equipmentTypeData.name)
   }
 
   // Create the different form input for all the equipment options

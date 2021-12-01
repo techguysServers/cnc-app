@@ -1,3 +1,4 @@
+import { getLocations } from "../../../lib/get";
 import { createLocation } from "../../../lib/post";
 
 export default async function handler(req, res) {
@@ -28,6 +29,10 @@ export default async function handler(req, res) {
         let placeDetails = await apiResponse.json();
         res.status(200).json({ data: placeDetails });
         break;
+      
+      case 'all_locations':
+        let result = await getLocations()
+        res.status(200).json({data: result})
 
       default:
         res.status(200).json({ response: "nothing to see here" });
