@@ -1,6 +1,7 @@
 import { useState } from "react";
+import Button from "./Button";
 
-function Collapsable({ header, content }) {
+function Collapsable({ header, content, onClick }) {
   const [showContent, setShowContent] = useState(false);
   return (
     <div>
@@ -8,7 +9,7 @@ function Collapsable({ header, content }) {
         <div className="bg-grey-lightest border-indigo">
           <header
             onClick={() => setShowContent(!showContent)}
-            className="flex justify-between items-center p-5 pl-8 pr-8 cursor-pointer select-none"
+            className="flex justify-between items-center p-4 cursor-pointer select-none"
           >
             <span className="text-indigo font-thin text-xl">{header}</span>
             {showContent ? (
@@ -22,10 +23,10 @@ function Collapsable({ header, content }) {
                   fill="none"
                   height="24"
                   stroke="white"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewbox="0 0 24 24"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
                   width="24"
                   xmlns="http://www.w3.org/2000/svg"
                 >
@@ -44,10 +45,10 @@ function Collapsable({ header, content }) {
                   fill="none"
                   height="24"
                   stroke="#606F7B"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewbox="0 0 24 24"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
                   width="24"
                   xmlns="http://www.w3.org/2000/svg"
                 >
@@ -58,10 +59,16 @@ function Collapsable({ header, content }) {
           </header>
           {showContent && (
             <div>
-              <div className="pl-8 pr-8 pb-5 text-grey-darkest">
-                <ul className="pl-4">
+              <div className="pb-5 text-grey-darkest">
+                <ul className="pl-4 pr-4">
                   <div className="flex flex-col text-left">{content}</div>
                 </ul>
+              </div>
+              <div className="pb-2 pl-4">
+                <Button
+                  onClick={onClick}
+                  label="Supprimer"
+                />
               </div>
             </div>
           )}

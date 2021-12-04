@@ -1,17 +1,17 @@
 import { useRouter } from "next/router";
 
-function Search() {
+function Search({ placeholder, onChange, onFocus, onBlur }) {
   const router = useRouter();
 
   return (
-    <div class="relative flex items-center w-full lg:w-64 h-full group">
-      <div class="absolute z-50 flex items-center justify-center block w-auto h-10 p-3 pr-2 text-sm text-gray-500 uppercase cursor-pointer sm:hidden">
+    <div className="relative flex items-center w-full lg:w-64 h-full group">
+      <div className="absolute z-50 flex items-center justify-center block w-auto h-10 p-3 pr-2 text-sm text-gray-500 uppercase cursor-pointer sm:hidden">
         <svg
           fill="none"
-          class="relative w-5 h-5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
+          className="relative w-5 h-5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
           stroke="currentColor"
           viewBox="0 0 24 24"
         >
@@ -19,7 +19,7 @@ function Search() {
         </svg>
       </div>
       <svg
-        class="absolute left-0 z-20 hidden w-4 h-4 ml-4 text-gray-500 pointer-events-none fill-current group-hover:text-gray-400 sm:block"
+        className="absolute left-0 z-20 hidden w-4 h-4 ml-4 text-gray-500 pointer-events-none fill-current group-hover:text-gray-400 sm:block"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 20 20"
       >
@@ -27,12 +27,15 @@ function Search() {
       </svg>
       <input
         type="text"
-        class="block w-full py-1.5 pl-10 pr-4 leading-normal rounded-2xl focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 ring-opacity-90 bg-gray-100 dark:bg-gray-800 text-gray-400 aa-input"
-        placeholder="Search"
+        className="block w-full py-1.5 pl-10 pr-4 leading-normal rounded-2xl focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 ring-opacity-90 bg-gray-100 dark:bg-gray-800 text-gray-400 aa-input"
+        placeholder={placeholder}
+        onChange={onChange}
+        onFocus={onFocus}
+        onBlur={onBlur}
       />
-      <div class="absolute right-0 hidden h-auto px-2 py-1 mr-2 text-xs text-gray-400 border border-gray-300 rounded-2xl md:block">
+      {/* <div className="absolute right-0 hidden h-auto px-2 py-1 mr-2 text-xs text-gray-400 border border-gray-300 rounded-2xl md:block">
         +
-      </div>
+      </div> */}
     </div>
   );
 }

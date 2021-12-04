@@ -30,7 +30,7 @@ function InspectionQuestion({ label, description, inputType }) {
       }
     };
     createOptionInput();
-  }, []);
+  }, [inputType]);
   return (
     <div className="flex flex-row">
       <div className="w-2/3">
@@ -38,7 +38,7 @@ function InspectionQuestion({ label, description, inputType }) {
         <br />
         <p>{description}</p>
       </div>
-      <div className="w-1/3">{optionInput}</div>
+      <div className="w-1/3 p-5">{optionInput}</div>
     </div>
   );
 }
