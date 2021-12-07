@@ -5,7 +5,7 @@ function Collapsable({ header, content, onClick }) {
   const [showContent, setShowContent] = useState(false);
   return (
     <div>
-      <article className="border-b rounded-lg shadow-md">
+      <article className="border-b rounded-lg shadow-lg bg-gray-100">
         <div className="bg-grey-lightest border-indigo">
           <header
             onClick={() => setShowContent(!showContent)}
@@ -15,7 +15,7 @@ function Collapsable({ header, content, onClick }) {
             {showContent ? (
               <div
                 onClick={() => setShowContent(!showContent)}
-                className="rounded-full bg-indigo-600 border border border-indigo w-7 h-7 flex items-center justify-center bg-indigo"
+                className="rounded-full bg-red-400 border border border-indigo w-7 h-7 flex items-center justify-center bg-indigo"
               >
                 <svg
                   aria-hidden="true"

@@ -1,12 +1,16 @@
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 
+import Badge from "../../../../components/Badge";
 import Button from "../../../../components/Button";
+import ButtonOutlined from "../../../../components/ButtonOutlined";
 import Collapsable from "../../../../components/Collapsable";
 import InputRequired from "../../../../components/inputs/Required";
 import Select from "../../../../components/inputs/Select";
 import SelectFancy from "../../../../components/inputs/SelectFancy";
 import TextArea from "../../../../components/inputs/TextArea";
 import InspectionQuestion from "../../../../components/InspectionQuestion";
+import SuccessCard from "../../../../components/SuccessCard";
 
 const mock = [
   {
@@ -17,9 +21,35 @@ const mock = [
 ];
 
 function AddInspection({ equipments }) {
+  const router = useRouter();
   const [name, setName] = useState();
   const [elementsArray, setElementsArray] = useState(mock);
-  const [tags, setTags] = useState([])
+  const [tags, setTags] = useState([]);
+  const [showSuccess, setShowSuccess] = useState();
+
+  // Send the data to the server
+  const submitForm = async (e) => {
+    e.preventDefault();
+    var body = {
+      request: "create_inspection_type",
+      userId: 1,
+      name: name,
+      inspectionOptions: elementsArray,
+      inspectionEquipments: tags,
+    };
+    let serverResponse = await fetch("/api/inspections", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+    let data = await serverResponse.json();
+    if (data.data == "success") {
+      setShowSuccess(true);
+    }
+  };
 
   // Function that add an element to the element array when a user clicks on the add button
   const addElement = () => {
@@ -41,10 +71,40 @@ function AddInspection({ equipments }) {
   };
 
   // Function that executes when an equipment is selected
-  const handleClick = (element) => {
-    console.log(element)
-    var newTagsArray = [...tags]
+  const AddEquipmentTag = (element) => {
+    console.log(element);
+    var newTagsArray = [...tags];
+    var tagObject = {
+      name: element.name,
+      id: element.id,
+    };
+    // Check if the tag already exists
+    tags.forEach((tag) => {
+      if (tag.id != element.id) {
+        // The object is not existing in the array of tags
+        console.log("yolo");
+        newTagsArray.push(tagObject);
+        setTags(newTagsArray);
+        console.log(tags);
+      } else {
+        console.log("Already selected");
+      }
+    });
+    // if the array is empty, add the object
+    if (tags.length == 0) {
+      newTagsArray.push(tagObject);
+      setTags(newTagsArray);
+    }
+  };
 
+  // Remove the equipment from the tag array
+  const removeTag = (index, e) => {
+    e.preventDefault();
+    console.log(index);
+    var newArray = [...tags];
+    newArray.splice(index);
+    console.log(newArray);
+    setTags(newArray);
   };
 
   // Function that handle all the changes in the inputs
@@ -72,44 +132,59 @@ function AddInspection({ equipments }) {
     setElementsArray(newArray);
   };
 
+  const handleConfirm = () => {
+    router.push("/inspections")
+  }
+
   return (
     <div>
-      <form className="mx-auto shadow-md pb-10">
-        <div className="p-4 bg-gray-100 border-t-2 border-indigo-400 rounded-lg bg-opacity-5">
-          <div className="max-w-sm mx-auto md:w-full md:mx-0">
-            <div className="inline-flex items-center space-x-4">
-              {/* <img
-                alt="profil"
-                src={equipmentTypeData.image_link}
-                className="mx-auto object-cover rounded-full h-16 w-16 "
-              /> */}
-              <h1 className="text-gray-600">Créer un rapport d'inspection</h1>
-            </div>
-          </div>
+      <div className="flex flex-row">
+        <div className="w-1/2">
+          <h1 className="text-gray-400 text-sm">
+            Créer un rapport d'inspection
+          </h1>
+          <input
+            placeholder="Formulaire d'inspection"
+            className="focus:outline-none text-xl text-red-500 placeholder-red-500 "
+            onChange={(e) => setName(e.target.value)}
+          />
         </div>
+        <div className="w-1/2 text-right">
+          <Button label="Confirmer" onClick={(e) => submitForm(e)} />
+        </div>
+      </div>
+      <br />
+      <form className="mx-auto shadow-xl pb-10 rounded-lg">
         <div className="flex flex-row p-5">
           <div className="w-1/3 mr-5">
             <div className="pr-8">
-              <h1 className="text-lg font-bold">Information de base</h1>
-              <br />
-              <InputRequired
-                onChange={(e) => setName(e.target.value)}
-                label="Nom du rapport"
-              />
-              <br />
               <SelectFancy
                 key="selectfancy"
-                handleClick={handleClick}
+                handleClick={AddEquipmentTag}
                 data={equipments.data}
                 label="Ajouter des équipements"
               />
+              <br />
+              <div className="flex flex-row">
+                {tags.map((tag, index) => (
+                  <Badge
+                    label={tag.name}
+                    onCancel={(e) => removeTag(index, e)}
+                  />
+                ))}
+              </div>
             </div>
             <br />
-            <Button onClick={() => addElement()} label="Ajouter un élément" />
+            <h1 className="text-lg font-bold">Questions</h1>
+            <br />
+            <ButtonOutlined
+              onClick={() => addElement()}
+              label="Ajouter une question"
+            />
             <br />
             <div className="pt-2">
               {elementsArray.map((element, index) => (
-                <div className="py-4">
+                <div className="py-2">
                   <Collapsable
                     onClick={() => deleteElement(index)}
                     header={element.label}
@@ -168,6 +243,16 @@ function AddInspection({ equipments }) {
           </div>
         </div>
       </form>
+      {showSuccess && (
+        <>
+          <SuccessCard
+            buttonLabel="Retour"
+            successMessage="L'équipment à été ajouté à la base de donnée"
+            onClick={() => handleConfirm()}
+          />
+          <div className="w-screen h-screen bg-gray-500	bg-opacity-25 fixed inset-x-0 top-0"></div>
+        </>
+      )}
     </div>
   );
 }

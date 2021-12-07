@@ -11,7 +11,7 @@ function SelectFancy({ data, placeholder, onChange, label, handleClick }) {
   return (
     <div className="w-64">
       <div className="mt-1 relative">
-        <label htmlFor="" className="text-gray-700">
+        <label htmlFor="" className="text-gray-700 mb-2">
           {label}
         </label>
         <Search
@@ -35,7 +35,7 @@ function SelectFancy({ data, placeholder, onChange, label, handleClick }) {
                   onMouseDown={() => isClicked(element)}
                   id="listbox-item-0"
                   role="option"
-                  className="text-gray-900 cursor-default hover:bg-indigo-500 hover:text-white select-none relative py-2 pl-3 pr-9"
+                  className="text-gray-900 cursor-default hover:bg-red-500 hover:text-white select-none relative py-2 pl-3 pr-9"
                 >
                   <div className="flex items-center">
                     <img

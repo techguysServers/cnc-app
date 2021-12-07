@@ -9,7 +9,7 @@ function Select({ options, label, value, onChange }) {
         class="block w-52 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
         name="animals"
       >
-        <option value="">Select an option</option>
+        <option value="" disabled>-- Choisir --</option>
         {options.map((option) => (
           <option value={option.value}>{option.label}</option>
         ))}
