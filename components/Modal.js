@@ -4,7 +4,7 @@ function Modal({ title, content, onCancel, onConfirm }) {
   return (
     <div className="h-screen w-full z-10 inset-0 overflow-y-auto absolute">
       <div className="absolute w-full h-full inset-0 bg-gray-500 opacity-75"></div>
-      <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 sm:p-0">
         <span
           className="hidden sm:inline-block sm:align-middle sm:h-screen"
           aria-hidden="true"
@@ -25,7 +25,7 @@ function Modal({ title, content, onCancel, onConfirm }) {
                   <br />
                   <div className="lg:mt-0 lg:flex-shrink-0">{content}</div>
                   <br />
-                  <div className="flex flex-row gap-x-4">
+                  <div className="flex flex-row gap-x-4 justify-evenly">
                     <Button label="Annulé" onClick={onCancel} />
                     <Button label="Confirmé" onClick={onConfirm} />
                   </div>
