@@ -1,5 +1,5 @@
 import { createInspectionType } from "../../../lib/post";
-import { getInspectionsTypes } from "../../../lib/get";
+import { getEquipmentInspectionsTypes, getInspectionsTypes } from "../../../lib/get";
 
 export default async function handler(req, res) {
   console.log(req.body);
@@ -17,7 +17,15 @@ export default async function handler(req, res) {
   }
 
   if (req.method == "GET") {
-    var data = await getInspectionsTypes();
-    res.status(200).json({ data: data });
+    switch (req.query.request) {
+      case "inspections_types":
+        var data = await getInspectionsTypes();
+        res.status(200).json({ data: data });
+        break;
+      case "equipment_inspections":
+        var equipmentTypeId = req.query.id
+        var data = await getEquipmentInspectionsTypes(equipmentTypeId)
+        res.status(200).json({ data: data })
+    }
   }
 }

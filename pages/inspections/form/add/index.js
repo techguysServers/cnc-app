@@ -22,7 +22,7 @@ const mock = [
 
 function AddInspection({ equipments }) {
   const router = useRouter();
-  const [name, setName] = useState();
+  const [name, setName] = useState("Rapport d'inspection");
   const [elementsArray, setElementsArray] = useState(mock);
   const [tags, setTags] = useState([]);
   const [showSuccess, setShowSuccess] = useState();
@@ -221,6 +221,7 @@ function AddInspection({ equipments }) {
                             },
                           ]}
                         />
+                        
                       </div>
                     }
                   />
