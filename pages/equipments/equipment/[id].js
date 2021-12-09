@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import EquipmentProfilCard from "../../../components/equipment/EquipmentProfilCard";
-import Button from "../../../components/Button";
-import Modal from "../../../components/Modal";
-import Select from "../../../components/inputs/Select";
+import TableHeader from "../../../components/TableHeader";
+import InspectionTable from "../../../components/inspection/InspectionTable";
+import InspectionSurveyBox from "../../../components/InspectionSurveyBox";
 
 function EquipmentProfil({
   equipmentData,
@@ -12,26 +12,48 @@ function EquipmentProfil({
   equipmentInspectionsType,
 }) {
   const [showModal, setShowModal] = useState();
-  console.log(equipmentInspectionsType[0]);
+  const [addInspection, setAddInspection] = useState(false);
+  const [inspectionForm, setInspectionForm] = useState();
+  const [inspectionQuestion, setInspectionQuestion] = useState([])
 
-  let modalContent;
+  console.log(equipmentInspectionsType)
+  // Create an array containing all the options in the select input
+  // Each option is a different inspection form
+  let inspectionsTypes;
   if (equipmentInspectionsType.length != 0) {
-    var inspectionsTypes = []
-    equipmentInspectionsType[0].map(type => {
+    inspectionsTypes = [];
+    equipmentInspectionsType.map((type) => {
+      console.log(type);
       inspectionsTypes.push({
-        label: type.name,
-        value: type.name
-      })
-    })
-    modalContent = (
-      <Select
-        label="Type d'inspection"
-        options={inspectionsTypes}
-      />
-    )
+        label: type[0].name,
+        value: type[0].id,
+      });
+    });
   } else {
-    modalContent = "Aucun inspection associé";
+    inspectionsTypes = [];
   }
+
+  // Fetch the inspection form when the selected option change
+  useEffect(() => {
+    console.log(inspectionForm);
+    // GET the equipment data
+    const fetchInspectionQuestions = async () => {
+      let serverResponse = await fetch(
+        "http://localhost:3000/api/inspections?request=inspection_question&id=" + inspectionForm,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        }
+      );
+      let data = await serverResponse.json();
+      console.log(data);
+      setInspectionQuestion(data.data)
+    };
+    fetchInspectionQuestions()
+  }, [inspectionForm]);
 
   return (
     <div className="flex flex-row flex-wrap">
@@ -40,18 +62,21 @@ function EquipmentProfil({
         metaData={equipmentMeta}
         typeData={equipmentTypeData[0]}
       />
-      <div className=" flex flex-column lg:w-1/2">
-        <div className="ml-auto">
-          <Button label="Créer une inspection" onClick={() => setShowModal(true)} />
-        </div>
-      </div>
-      {showModal && (
-        <Modal 
-          title="Ajouter une inspection" 
-          content={modalContent} 
-          onCancel={() => setShowModal(false)}
+      <div className="flex flex-col lg:w-2/3 pl-4">
+        <TableHeader onClick={() => setAddInspection(true)} />
+        <br />
+
+        {addInspection ? (
+          <InspectionSurveyBox
+            value={inspectionForm}
+            options={inspectionsTypes}
+            inspectionsQuestions={inspectionQuestion}
+            onSelect={(e) => setInspectionForm(e.target.value)}
           />
-      )}
+        ) : (
+          <InspectionTable data={[]} />
+        )}
+      </div>
     </div>
   );
 }
