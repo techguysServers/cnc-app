@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import InputRequired from "./inputs/Required";
 import YesNo from "./inputs/YesNo";
 
-function InspectionQuestion({ label, description, inputType }) {
+function InspectionQuestion({ label, description, inputType, onChange, id }) {
   const [optionInput, setOptionInput] = useState("");
   // Create the different form input for all the equipment options
   useEffect(() => {
@@ -12,7 +12,7 @@ function InspectionQuestion({ label, description, inputType }) {
           console.log(true);
           setOptionInput(
             <div className=" relative ">
-              <InputRequired />
+              <InputRequired key={id} id={id} onChange={onChange}/>
             </div>
           );
           break;
@@ -20,7 +20,7 @@ function InspectionQuestion({ label, description, inputType }) {
           console.log(true);
           setOptionInput(
             <div className=" relative ">
-              <YesNo />
+              <YesNo key={id} name={label} onChange={onChange}/>
             </div>
           );
           break;
@@ -30,9 +30,9 @@ function InspectionQuestion({ label, description, inputType }) {
       }
     };
     createOptionInput();
-  }, [inputType]);
+  }, [inputType, onChange]);
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-row items-center">
       <div className="w-2/3">
         <b>{label} :</b>
         <br />

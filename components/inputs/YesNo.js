@@ -1,4 +1,4 @@
-function YesNo({ label, onChange }) {
+function YesNo({ label, onChange, name }) {
   return (
     <div className=" relative ">
       <label for="name-with-label" class="text-gray-700">
@@ -9,7 +9,7 @@ function YesNo({ label, onChange }) {
           <input
             onChange={onChange}
             type="radio"
-            name="vehicle"
+            name={name}
             class="h-5 w-5 text-red-600"
             value="yes"
           />
@@ -19,7 +19,7 @@ function YesNo({ label, onChange }) {
           <input
             onChange={onChange}
             type="radio"
-            name="vehicle"
+            name={name}
             class="h-5 w-5 text-red-600"
             value="no"
           />
