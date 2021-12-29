@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useUser } from '@clerk/nextjs'
 
 import Select from "./inputs/Select";
 import Button from "./Button";
@@ -13,6 +14,7 @@ function InspectionSurveyBox({
   inspectionReportId,
   onSubmit
 }) {
+  const user = useUser();
   const [responses, setResponses] = useState([]);
 
   const handleChange = (value, id) => {
@@ -44,7 +46,7 @@ function InspectionSurveyBox({
     var body = {
       request: "create_inspection",
       inspectionReportId: inspectionReportId,
-      userId: 1,
+      userId: user.id,
       equipmentId: equipmentId,
       inspectionResponses: responses,
     };

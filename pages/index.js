@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
+import { useUser } from "@clerk/clerk-react";
 
 import Button from "../components/Button";
 import Card from "../components/Card";
+import MainHeading from "../components/headings/MainHeading";
 
 export default function Home() {
+  const user = useUser();
   const [data, setData] = useState([]);
 
   useEffect(() => {
     const getData = async () => {
-      let serverResponse = await fetch("/api/get?request=equipments_types", {
+      let serverResponse = await fetch("/api/equipment-type?request=equipments_types&userId=" + user.id, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -25,7 +28,7 @@ export default function Home() {
     <div>
       <div className="flex flex-row">
         <div className="flex-1">
-          <h1 className="text-2xl">Types d'équipement</h1>
+          <MainHeading text="Type d'équipement" />
         </div>
         <div className="flex-1 text-right">
           <Button label="Ajouter" />

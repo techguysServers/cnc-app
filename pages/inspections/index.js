@@ -2,6 +2,7 @@ import Button from "../../components/Button";
 import { useRouter } from "next/router";
 import Card from "../../components/Card";
 import CardWithIcon from "../../components/CardWithIcon";
+import MainHeading from "../../components/headings/MainHeading";
 
 function Inspections({ inspectionsTypes }) {
   const router = useRouter();
@@ -10,7 +11,7 @@ function Inspections({ inspectionsTypes }) {
     <div>
       <div className="flex flex-row">
         <div className="flex-1">
-          <h1 className="text-2xl">Rapport d'inspections</h1>
+          <MainHeading text="Rapports d'inspections"/>
         </div>
         <div className="flex-1 text-right">
           <Button

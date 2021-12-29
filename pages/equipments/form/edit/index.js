@@ -7,7 +7,7 @@ import YesNo from "../../../../components/inputs/YesNo";
 import SuccessCard from "../../../../components/SuccessCard";
 
 
-function AddEquipment({ equipmentTypeData }) {
+function EditEquipment({ equipmentTypeData }) {
   const user = useUser()
   console.log(user)
   const router = useRouter();
@@ -23,7 +23,7 @@ function AddEquipment({ equipmentTypeData }) {
   useEffect(() => {
     const getEquipmentOptionsData = async () => {
       let serverResponse = await fetch(
-        "/api/equipment-type?request=equipment_types_options&id=" + id,
+        "/api/get?request=equipment_types_options&id=" + id,
         {
           method: "GET",
           headers: {
@@ -218,7 +218,7 @@ function AddEquipment({ equipmentTypeData }) {
 export async function getServerSideProps(context) {
   const { id = "id" } = context.query;
   let serverResponse = await fetch(
-    "http://localhost:3000/api/equipment-type?request=equipment_type&id=" + id,
+    "http://localhost:3000/api/get?request=equipment_type&id=" + id,
     {
       method: "GET",
       headers: {
@@ -236,4 +236,4 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default AddEquipment;
+export default EditEquipment;

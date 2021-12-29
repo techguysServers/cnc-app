@@ -12,7 +12,8 @@ function EquipmentProfil({
   equipmentMeta,
   equipmentTypeData,
   equipmentInspectionsType,
-  equipmentInspections
+  equipmentInspections,
+  usersData
 }) {
   const router = useRouter();
   const [addInspection, setAddInspection] = useState(false);
@@ -62,10 +63,14 @@ function EquipmentProfil({
     fetchInspectionQuestions();
   }, [inspectionForm]);
 
+  // When the user clicks on the confirm button on the success card
   const handleConfirm = () => {
+    // Set the add inspection false to show the inspection table
     setAddInspection(false);
-    refreshData()
-    setSuccess(false)
+    // Refresh the data to show the newly entered inspection
+    refreshData();
+    // Hide the success card
+    setSuccess(false);
   };
 
   return (
@@ -76,7 +81,11 @@ function EquipmentProfil({
         typeData={equipmentTypeData[0]}
       />
       <div className="flex flex-col lg:w-2/3 pl-4">
-        <TableHeader onClick={() => setAddInspection(true)} />
+        <TableHeader
+          onClick={() => setAddInspection(true)}
+          cancel={addInspection}
+          onCancel={() => setAddInspection(false)}
+        />
         <br />
 
         {addInspection ? (
@@ -90,7 +99,7 @@ function EquipmentProfil({
             onSubmit={() => setSuccess(true)}
           />
         ) : (
-          <InspectionTable data={equipmentInspections} />
+          <InspectionTable data={equipmentInspections} usersData={usersData}/>
         )}
       </div>
       {success && (
@@ -112,7 +121,7 @@ export async function getServerSideProps(context) {
 
   // GET the equipment data
   let serverResponse = await fetch(
-    "http://localhost:3000/api/equipment/" + id,
+    "http://localhost:3000/api/equipment/" + id + "?request=equipmentProfil",
     {
       method: "GET",
       headers: {
@@ -122,58 +131,14 @@ export async function getServerSideProps(context) {
     }
   );
   let data = await serverResponse.json();
-
-  // Get the equipment type id from the data
-  let equipmentTypeId = data.data[0].equipment_type_id;
-  // GET the equipment type data
-  let serverSecondResponse = await fetch(
-    "http://localhost:3000/api/get?request=equipment_type&id=" +
-      equipmentTypeId,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    }
-  );
-  let equipmentTypeData = await serverSecondResponse.json();
-
-  // GET the equipment inspections types
-  let serverThirdResponse = await fetch(
-    "http://localhost:3000/api/inspections?request=equipment_inspections_reports&id=" +
-      equipmentTypeId,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    }
-  );
-  let equipmentInspectionsType = await serverThirdResponse.json();
-
-  // GET the equipment inspections
-  let inspectionResponse = await fetch(
-    "http://localhost:3000/api/inspections?request=equipment_inspections&id=" +
-      id,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    }
-  );
-  let equipmentInspections = await inspectionResponse.json();
-
   return {
     props: {
       equipmentData: data.data,
       equipmentMeta: data.metaData,
-      equipmentTypeData: equipmentTypeData.data,
-      equipmentInspectionsType: equipmentInspectionsType.data,
-      equipmentInspections: equipmentInspections.data
+      equipmentTypeData: data.equipmentTypeData,
+      equipmentInspectionsType: data.inspectionsTypes,
+      equipmentInspections: data.inspections,
+      usersData: data.users
     },
   };
 }

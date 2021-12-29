@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 
 import EquipmentTable from "../../components/equipment/EquipmentTable";
+import MainHeading from "../../components/headings/MainHeading";
 import TableHeader from "../../components/TableHeader";
 
 function Equipment({ equipments }) {
@@ -12,7 +13,7 @@ function Equipment({ equipments }) {
     <div>
       <div className="flex flex-row">
         <div className="flex-1">
-          <h1 className="text-2xl font-normal">{name}</h1>
+          <MainHeading text={name}/>
         </div>
       </div>
       <br />
@@ -26,7 +27,7 @@ function Equipment({ equipments }) {
 export async function getServerSideProps(context) {
   const { id = "id" } = context.query;
   let serverResponse = await fetch(
-    "http://localhost:3000/api/get?request=equipments&id=" + id,
+    "http://localhost:3000/api/equipment?request=equipments&id=" + id,
     {
       method: "GET",
       headers: {

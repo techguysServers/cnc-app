@@ -11,10 +11,10 @@ function EquipmentProfilCard({ data, metaData, typeData }) {
               <img
                 alt="..."
                 src={typeData.image_link}
-                className="shadow-xl rounded-full h-24 align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-30-px"
+                className="shadow-xl rounded-full h-28 align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-100-px"
               />
             </div>
-            <div className="w-full px-4 text-center mt-5">
+            <div className="w-full px-4 text-center mt-12">
               <div className="flex justify-center py-4 lg:pt-4 pt-8">
                 <div className="mr-4 p-3 text-center">
                   <span className="text-l font-bold block uppercase tracking-wide text-blueGray-600">

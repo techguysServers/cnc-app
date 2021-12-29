@@ -7,7 +7,7 @@ function Card({ image, tag, title, description, link }) {
   };
 
   return (
-    <div className="overflow-hidden shadow-lg rounded-2xl h-90 w-60 md:w-80 cursor-pointer m-auto flex-grow">
+    <div className="overflow-hidden shadow-md rounded-2xl h-90 w-80 md:w-80 cursor-pointer m-auto flex-grow">
       <a onClick={() => handleClick()} className="w-full block h-full">
         {image && (
           <img

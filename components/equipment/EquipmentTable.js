@@ -90,14 +90,14 @@ function EquipmentTable({ data }) {
                     <tr key={type.serial_nb} onClick={() => handleClick(type.id)} class="hover:bg-gray-50 cursor-pointer">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
-                          <div className="flex-shrink-0 h-10 w-10">
+                          {/* <div className="flex-shrink-0 h-10 w-10">
                             <div className="h-10 w-10 rounded-full p-1">
                               <img
                                 src="https://res.cloudinary.com/techguys/image/upload/v1637538500/cnc/service_dcnymj.png"
                                 alt=""
                               />
                             </div>
-                          </div>
+                          </div> */}
                           <div className="ml-4">
                             <div className="text-sm font-medium text-gray-900">
                               {type.serial_nb}
