@@ -1,51 +1,41 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
+import Button from "../../../../components/Button";
+import ButtonOutlined from "../../../../components/ButtonOutlined";
+import Collapsable from "../../../../components/Collapsable";
 import InputRequired from "../../../../components/inputs/Required";
-import YesNo from "../../../../components/inputs/YesNo";
+import Select from "../../../../components/inputs/Select";
+import TextArea from "../../../../components/inputs/TextArea";
+import InspectionQuestion from "../../../../components/InspectionQuestion";
 import SuccessCard from "../../../../components/SuccessCard";
 
-function AddEquipment({ equipmentTypeData }) {
+const mock = [
+  {
+    label: "Caractéristique",
+    inputType: "yesno",
+    description: "Une caractéristique de l'équipement.",
+  },
+];
+
+function AddEquipmentType() {
   const router = useRouter();
-  const { id } = router.query;
-  const [optionData, setOptionData] = useState([]);
-  const [numSerie, setNumSerie] = useState();
-  const [numInspection, setNumInspection] = useState();
-  const [customInputs, setCustomInputs] = useState([]);
-  const [optionInputs, setOptionsInputs] = useState([]);
-  const [showSuccess, setShowSuccess] = useState(false);
+  const [name, setName] = useState("Équipement de sécurité");
+  const [description, setDescription] = useState("Une description");
+  const [elementsArray, setElementsArray] = useState(mock);
+  const [showSuccess, setShowSuccess] = useState();
 
-  // Get the options data from the DB
-  useEffect(() => {
-    const getEquipmentOptionsData = async () => {
-      let serverResponse = await fetch(
-        "/api/get?request=equipment_types_options&id=" + id,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-        }
-      );
-      let data = await serverResponse.json();
-      console.log(data);
-      setOptionData(data.data);
-    };
-    getEquipmentOptionsData();
-  }, [id]);
-
-  // Send the data to the API
-  const submitData = async (e) => {
+  // Send the data to the server
+  const submitForm = async (e) => {
     e.preventDefault();
     var body = {
-      request: "create_equipment",
-      equipmentTypeId: id,
-      numSerie: numSerie,
-      numInspection: numInspection,
-      metaData: customInputs,
+      request: "create_equipment_type",
+      userId: 1,
+      name: name,
+      description: description,
+      equipmentOptions: elementsArray
     };
-    let serverResponse = await fetch("/api/equipment", {
+    let serverResponse = await fetch("/api/equipment_type", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -59,140 +49,146 @@ function AddEquipment({ equipmentTypeData }) {
     }
   };
 
-  // Handle when one of the custom input value change
-  const handleChange = (key, value) => {
-    // Get the data
-    var newInputsArray = [...customInputs];
-    // Check if the object is already in the custom inputs array
-    var objectIndex;
-    var isInArray;
-    newInputsArray.forEach((input, index) => {
-      if (input.key == key) {
-        isInArray = true;
-        objectIndex = index;
-      }
+  // Function that add an element to the element array when a user clicks on the add button
+  const addElement = () => {
+    const newArray = [...elementsArray];
+    newArray.push({
+      label: "Caractéristique",
+      inputType: "yesno",
+      description: "Une caractéristique de l'équipement.",
     });
-    // If the object is already there, edit the old one
-    if (isInArray === true) {
-      console.log(objectIndex);
-      // Get the object
-      var newObject = newInputsArray[objectIndex];
-      newObject["value"] = value;
-      newInputsArray[objectIndex] = newObject;
-    } else {
-      newInputsArray.push({
-        key: key,
-        value: value,
-      });
-    }
-    console.log(newInputsArray);
-    setCustomInputs(newInputsArray);
+    setElementsArray(newArray);
   };
 
-  // Redirect the user to the equipment page after confirm
+  // Function that deletes on of the element
+  const deleteElement = (index) => {
+    var newArray = [...elementsArray];
+    newArray.splice(index, 1);
+    console.log(newArray);
+    setElementsArray(newArray);
+  };
+
+  // Function that handle all the changes in the inputs
+  const handleChange = (value, index, key) => {
+    console.log(value);
+    var newElement = elementsArray[index];
+    // Check the key of the changed input
+    switch (key) {
+      case "label":
+        newElement.label = value;
+        break;
+      case "description":
+        newElement.description = value;
+        break;
+      case "inputType":
+        newElement.inputType = value;
+        break;
+      default:
+        break;
+    }
+    console.log(newElement);
+    var newArray = [...elementsArray];
+    newArray[index] = newElement;
+    console.log(newArray);
+    setElementsArray(newArray);
+  };
+
   const handleConfirm = () => {
-    router.push('/equipments/' + id + '?name=' + equipmentTypeData.name)
-  }
-
-  // Create the different form input for all the equipment options
-  useEffect(() => {
-    const createOptionsInputs = () => {
-      var inputs = [];
-      optionData.forEach((option) => {
-        switch (option.input_type) {
-          case "input":
-            console.log(true);
-            inputs.push(
-              <div className=" relative ">
-                <InputRequired
-                  label={option.key}
-                  id={option.key}
-                  onChange={(e) => handleChange(option.key, e.target.value)}
-                />
-              </div>
-            );
-            break;
-          case "yesno":
-            console.log(true);
-            inputs.push(
-              <div className=" relative ">
-                <YesNo
-                  label={option.key}
-                  onChange={(e) => handleChange(option.key, e.target.value)}
-                />
-              </div>
-            );
-            break;
-
-          default:
-            break;
-        }
-      });
-      setOptionsInputs(inputs);
-    };
-    createOptionsInputs();
-  }, [optionData]);
+    router.push("/");
+  };
 
   return (
     <div>
-      <form className="container max-w-2xl mx-auto shadow-md md:w-3/4">
-        <div className="p-4 bg-gray-100 border-t-2 border-indigo-400 rounded-lg bg-opacity-5">
-          <div className="max-w-sm mx-auto md:w-full md:mx-0">
-            <div className="inline-flex items-center space-x-4">
-              <img
-                alt="profil"
-                src={equipmentTypeData.image_link}
-                className="mx-auto object-cover rounded-full h-16 w-16 "
-              />
-              <h1 className="text-gray-600">
-                Ajouter un {equipmentTypeData.name}
-              </h1>
-            </div>
-          </div>
+      <div className="flex flex-row">
+        <div className="w-1/2">
+          <h1 className="text-gray-500 text-xl">
+            Créer un type d'équipement
+          </h1>
         </div>
-        <div className="space-y-6 bg-white">
-          <div className="items-center w-full p-4 space-y-4 text-gray-500 md:inline-flex md:space-y-0">
-            <h2 className="max-w-sm mx-auto md:w-1/3">Information de base</h2>
-            <div className="max-w-sm mx-auto md:w-2/3">
-              <div>
-                <div className=" relative ">
-                  <InputRequired
-                    label="Num. de série"
-                    placeholder="12345678"
-                    id="num_serie"
-                    onChange={(e) => setNumSerie(e.target.value)}
+        <div className="w-1/2 text-right">
+          <Button label="Confirmer" onClick={(e) => submitForm(e)} />
+        </div>
+      </div>
+      <br />
+      <form className="mx-auto shadow-xl pb-10 rounded-lg">
+        <div className="flex flex-row p-5">
+          <div className="w-1/3 mr-5">
+            <InputRequired
+              label="Nom de l'équipement"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <br />
+            <TextArea
+                value={description}
+                label="Description"
+                onChange={(e) => setDescription(e.target.value)}
+            />
+            <h1 className="text-lg font-bold">Caractéristiques</h1>
+            <br />
+            <ButtonOutlined
+              onClick={() => addElement()}
+              label="Ajouter une caractéristique"
+            />
+            <br />
+            <div className="pt-2">
+              {elementsArray.map((element, index) => (
+                <div className="py-2">
+                  <Collapsable
+                    onClick={() => deleteElement(index)}
+                    header={element.label}
+                    content={
+                      <div>
+                        <InputRequired
+                          label="Nom"
+                          value={element.label}
+                          onChange={(e) =>
+                            handleChange(e.target.value, index, "label")
+                          }
+                        />
+                        <TextArea
+                          value={element.description}
+                          label="Description"
+                          onChange={(e) =>
+                            handleChange(e.target.value, index, "description")
+                          }
+                        />
+                        <Select
+                          value={element.inputType}
+                          onChange={(e) =>
+                            handleChange(e.target.value, index, "inputType")
+                          }
+                          label="Type de question"
+                          options={[
+                            {
+                              label: "Oui ou non",
+                              value: "yesno",
+                            },
+                            {
+                              label: "Réponse courte",
+                              value: "input",
+                            },
+                          ]}
+                        />
+                      </div>
+                    }
                   />
                 </div>
-              </div>
-              <br />
-              <div>
-                <div className=" relative ">
-                  <InputRequired
-                    label="Num. d'inspection"
-                    placeholder="12345678"
-                    id="num_inspection"
-                    onChange={(e) => setNumInspection(e.target.value)}
-                  />
-                </div>
-              </div>
+              ))}
             </div>
           </div>
-          <hr />
-          <div className="items-center w-full p-4 space-y-4 text-gray-500 md:inline-flex md:space-y-0">
-            <h2 className="max-w-sm mx-auto md:w-1/3">Information générale</h2>
-            <div className="max-w-sm mx-auto space-y-5 md:w-2/3">
-              {optionInputs}
-            </div>
-          </div>
-          <hr />
-          <div className="w-full px-4 pb-4 ml-auto text-gray-500 md:w-1/3">
-            <button
-              onClick={(e) => submitData(e)}
-              type="submit"
-              className="py-2 px-4  bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
-            >
-              Ajouter
-            </button>
+          <div className="border-b rounded-lg shadow-md w-2/3 p-5">
+            <h2 className="text-lg">Aperçu</h2>
+            <br />
+            {elementsArray.map((element) => (
+              <div className="mt-5">
+                <InspectionQuestion
+                  label={element.label}
+                  description={element.description}
+                  inputType={element.inputType}
+                />
+              </div>
+            ))}
           </div>
         </div>
       </form>
@@ -210,25 +206,4 @@ function AddEquipment({ equipmentTypeData }) {
   );
 }
 
-export async function getServerSideProps(context) {
-  const { id = "id" } = context.query;
-  let serverResponse = await fetch(
-    "http://localhost:3000/api/get?request=equipment_type&id=" + id,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    }
-  );
-  let data = await serverResponse.json();
-  console.log(data);
-  return {
-    props: {
-      equipmentTypeData: data.data[0],
-    },
-  };
-}
-
-export default AddEquipment;
+export default AddEquipmentType;

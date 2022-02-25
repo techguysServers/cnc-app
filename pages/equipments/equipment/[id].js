@@ -4,55 +4,34 @@ import EquipmentProfilCard from "../../../components/equipment/EquipmentProfilCa
 import TableHeader from "../../../components/TableHeader";
 import InspectionTable from "../../../components/inspection/InspectionTable";
 import InspectionSurveyBox from "../../../components/InspectionSurveyBox";
+import { getRequest } from "../../../utils/request";
 
 function EquipmentProfil({
   equipmentData,
   equipmentMeta,
   equipmentTypeData,
   equipmentInspectionsType,
+  defaultInspectionType
 }) {
+  /*
+   * Component States
+   */
   const [showModal, setShowModal] = useState();
-  const [addInspection, setAddInspection] = useState(false);
-  const [inspectionForm, setInspectionForm] = useState();
-  const [inspectionQuestion, setInspectionQuestion] = useState([])
-
-  console.log(equipmentInspectionsType)
-  // Create an array containing all the options in the select input
-  // Each option is a different inspection form
-  let inspectionsTypes;
-  if (equipmentInspectionsType.length != 0) {
-    inspectionsTypes = [];
-    equipmentInspectionsType.map((type) => {
-      console.log(type);
-      inspectionsTypes.push({
-        label: type[0].name,
-        value: type[0].id,
-      });
-    });
-  } else {
-    inspectionsTypes = [];
-  }
+  const [addInspection, setAddInspection] = useState(false); // When true, show the inspection dropdown
+  const [inspectionForm, setInspectionForm] = useState(defaultInspectionType); // The inspection dropdown selection goes here
+  const [inspectionQuestion, setInspectionQuestion] = useState([]);
 
   // Fetch the inspection form when the selected option change
   useEffect(() => {
     console.log(inspectionForm);
-    // GET the equipment data
+    // GET the inspections type questions
     const fetchInspectionQuestions = async () => {
-      let serverResponse = await fetch(
-        "http://localhost:3000/api/inspections?request=inspection_question&id=" + inspectionForm,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-        }
+      let inspectionResponse = await getRequest(
+        "inspections?request=inspection_question&id=" + inspectionForm
       );
-      let data = await serverResponse.json();
-      console.log(data);
-      setInspectionQuestion(data.data)
+      setInspectionQuestion(inspectionResponse.data);
     };
-    fetchInspectionQuestions()
+    fetchInspectionQuestions();
   }, [inspectionForm]);
 
   return (
@@ -69,7 +48,7 @@ function EquipmentProfil({
         {addInspection ? (
           <InspectionSurveyBox
             value={inspectionForm}
-            options={inspectionsTypes}
+            options={equipmentInspectionsType}
             inspectionsQuestions={inspectionQuestion}
             onSelect={(e) => setInspectionForm(e.target.value)}
           />
@@ -81,58 +60,47 @@ function EquipmentProfil({
   );
 }
 
+// Get the data from the server before rendering the app with server side rendering
 export async function getServerSideProps(context) {
+  // Retreive the equipment id from the url params
   const { id = "id" } = context.query;
-
   // GET the equipment data
-  let serverResponse = await fetch(
-    "http://localhost:3000/api/equipment/" + id,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    }
-  );
-  let data = await serverResponse.json();
-
+  let equipementData = await getRequest("equipment/" + id);
+  console.log("Equipment Data", equipementData);
   // Get the equipment type id from the data
-  let equipmentTypeId = data.data[0].equipment_type_id;
+  let equipmentTypeId = equipementData.data[0].equipment_type_id;
+  console.log("Equipment Type ID", equipmentTypeId);
   // GET the equipment type data
-  let serverSecondResponse = await fetch(
-    "http://localhost:3000/api/get?request=equipment_type&id=" +
-      equipmentTypeId,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    }
+  let equipmentTypeData = await getRequest(
+    "get?request=equipment_type&id=" + equipmentTypeId
   );
-  let equipmentTypeData = await serverSecondResponse.json();
-
+  console.log("Equipment Type Data", equipmentTypeData);
   // GET the equipment inspections types
-  let serverThirdResponse = await fetch(
-    "http://localhost:3000/api/inspections?request=equipment_inspections&id=" +
-      equipmentTypeId,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    }
+  let equipmentInspectionsType = await getRequest(
+    "inspections?request=equipment_inspections&id=" + equipmentTypeId
   );
-  let equipmentInspectionsType = await serverThirdResponse.json();
-
+  
+  // Create an array containing all the options in the select input
+  // Each option is a different inspection form
+  let defaultInspectionType = []
+  let inspectionsTypes = [];
+  if (equipmentInspectionsType.data) {
+    console.log("il y a des rapport !");
+    equipmentInspectionsType.data.map((type) => {
+      console.log('type', type)
+      inspectionsTypes.push({
+        label: type[0].name,
+        value: type[0].id,
+      });
+    });
+  }
   return {
     props: {
-      equipmentData: data.data,
-      equipmentMeta: data.metaData,
+      equipmentData: equipementData.data,
+      equipmentMeta: equipementData.metaData,
       equipmentTypeData: equipmentTypeData.data,
-      equipmentInspectionsType: equipmentInspectionsType.data,
+      equipmentInspectionsType: inspectionsTypes,
+      defaultInspectionType: defaultInspectionType
     },
   };
 }

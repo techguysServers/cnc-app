@@ -16,7 +16,7 @@ function Equipment({ equipments }) {
         </div>
       </div>
       <br />
-      <TableHeader onClick={() => router.push("form/add?id=" + id)} />
+      <TableHeader onClick={() => router.push("equipment/form/add?id=" + id)} />
       <br />
       <EquipmentTable data={equipments} />
     </div>

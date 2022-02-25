@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 import Button from "../components/Button";
 import Card from "../components/Card";
 
 export default function Home() {
   const [data, setData] = useState([]);
+
+  const router = useRouter();
 
   useEffect(() => {
     const getData = async () => {
@@ -28,7 +31,7 @@ export default function Home() {
           <h1 className="text-2xl">Types d'équipement</h1>
         </div>
         <div className="flex-1 text-right">
-          <Button label="Ajouter" />
+          <Button label="Ajouter" onClick={(e) => router.push("equipments/form/add")} />
         </div>
       </div>
       <br />

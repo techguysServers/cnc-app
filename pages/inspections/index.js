@@ -35,7 +35,6 @@ function Inspections({ inspectionsTypes }) {
 }
 
 export async function getServerSideProps(context) {
-  const { id = "id" } = context.query;
   let serverResponse = await fetch("http://localhost:3000/api/inspections?request=inspections_types", {
     method: "GET",
     headers: {

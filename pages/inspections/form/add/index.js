@@ -133,21 +133,16 @@ function AddInspection({ equipments }) {
   };
 
   const handleConfirm = () => {
-    router.push("/inspections")
-  }
+    router.push("/inspections");
+  };
 
   return (
     <div>
       <div className="flex flex-row">
         <div className="w-1/2">
-          <h1 className="text-gray-400 text-sm">
+          <h1 className="text-gray-500 text-xl">
             Créer un rapport d'inspection
           </h1>
-          <input
-            placeholder="Formulaire d'inspection"
-            className="focus:outline-none text-xl text-red-500 placeholder-red-500 "
-            onChange={(e) => setName(e.target.value)}
-          />
         </div>
         <div className="w-1/2 text-right">
           <Button label="Confirmer" onClick={(e) => submitForm(e)} />
@@ -157,6 +152,12 @@ function AddInspection({ equipments }) {
       <form className="mx-auto shadow-xl pb-10 rounded-lg">
         <div className="flex flex-row p-5">
           <div className="w-1/3 mr-5">
+            <InputRequired
+              label="Titre du formulaire"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <br/>
             <div className="pr-8">
               <SelectFancy
                 key="selectfancy"
@@ -221,7 +222,6 @@ function AddInspection({ equipments }) {
                             },
                           ]}
                         />
-                        
                       </div>
                     }
                   />

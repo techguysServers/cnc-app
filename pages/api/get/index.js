@@ -6,7 +6,6 @@ import {
 } from "../../../lib/get";
 
 export default async function handler(req, res) {
-  console.log(req.query.request);
   switch (req.query.request) {
     case "equipments_types":
       var data = await getEquipmentsTypes();
@@ -18,6 +17,7 @@ export default async function handler(req, res) {
       break;
     case "equipment_types_options":
       var data = await getEquipmentTypeOptions(req.query.id);
+      console.log('API responses', data)
       res.status(200).json({ data: data });
       break;
     case "equipment_type":
