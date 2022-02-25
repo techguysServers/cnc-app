@@ -83,7 +83,7 @@ export async function getServerSideProps(context) {
   // Create an array containing all the options in the select input
   // Each option is a different inspection form
   let defaultInspectionType = []
-  let inspectionsTypes = [];
+  let inspectionsTypes = [];  
   if (equipmentInspectionsType.data) {
     console.log("il y a des rapport !");
     equipmentInspectionsType.data.map((type) => {
