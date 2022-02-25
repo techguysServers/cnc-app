@@ -18,7 +18,7 @@ function EquipmentProfil({
    */
   const [showModal, setShowModal] = useState();
   const [addInspection, setAddInspection] = useState(false); // When true, show the inspection dropdown
-  const [inspectionForm, setInspectionForm] = useState(defaultInspectionType); // The inspection dropdown selection goes here
+  const [inspectionForm, setInspectionForm] = useState([]); // The inspection dropdown selection goes here
   const [inspectionQuestion, setInspectionQuestion] = useState([]);
 
   // Fetch the inspection form when the selected option change
